@@ -158,9 +158,7 @@ async def process_dealership(
     county_service: CountyLookupService
 ) -> DealerData:
     """
-    Process a single dealership.
-
-    This is a stub implementation that will be expanded with full extractors.
+    Process a single dealership with full extraction workflow.
 
     Args:
         url: Dealership URL
@@ -172,6 +170,16 @@ async def process_dealership(
         DealerData or None if processing fails
     """
     logger = get_logger()
+
+    # Import extractors
+    from .extractors import (
+        PhoneExtractor,
+        AddressExtractor,
+        HoursExtractor,
+        URLDiscoverer,
+        ProviderDetector,
+        CreditAppProviderDetector
+    )
 
     # Create browser context
     context_handle = await browser_manager.create_context()
@@ -188,22 +196,103 @@ async def process_dealership(
 
         # Extract dealer name from page title
         dealer_name = await page.title()
+        logger.info(f"Processing: {dealer_name}")
 
-        logger.debug(f"Dealer name: {dealer_name}")
+        # Initialize evidence
+        evidence = Evidence(
+            dealer_homepage_phone=url,
+            captured_timestamp=datetime.now().strftime("%Y-%m-%d %H:%M") + f" ({config.timezone})"
+        )
 
-        # Create dealer data with stub values
-        # TODO: Implement full extractors
+        # Extract phone number
+        logger.debug("Extracting phone number...")
+        phone_extractor = PhoneExtractor()
+        phone_result = await phone_extractor.extract(dealer_context, page)
+        phone = phone_result.data if phone_result.success else None
+
+        if phone_result.evidence:
+            evidence.dealer_homepage_phone = phone_result.evidence
+
+        # Extract address
+        logger.debug("Extracting address...")
+        address_extractor = AddressExtractor()
+        address_result = await address_extractor.extract(dealer_context, page)
+        address = address_result.data if address_result.success else None
+
+        # Lookup county if address found
+        county = None
+        if address and county_service:
+            logger.debug("Looking up county...")
+            county = await county_service.lookup_county(
+                street=address.street,
+                city=address.city,
+                state=address.state,
+                zip_code=address.zip_code
+            )
+            if county and county.verification_url:
+                evidence.county_verification = county.verification_url
+
+        # Extract hours
+        logger.debug("Extracting hours...")
+        hours_extractor = HoursExtractor()
+        hours_result = await hours_extractor.extract(dealer_context)
+        hours = hours_result.data if hours_result.success else None
+
+        if hours_result.evidence:
+            evidence.dealer_hours_page = hours_result.evidence
+
+        # Discover URLs
+        logger.debug("Discovering URLs...")
+        url_discoverer = URLDiscoverer()
+        url_result = await url_discoverer.extract(dealer_context, page)
+        urls = url_result.data if url_result.success else None
+
+        if urls:
+            if urls.service_scheduler:
+                evidence.service_verified_on = urls.service_scheduler
+            if urls.credit_app:
+                evidence.credit_app_verified_on = urls.credit_app
+            if urls.facebook:
+                evidence.facebook_final = urls.facebook
+                if urls.facebook_source:
+                    evidence.facebook_start = urls.facebook_source
+
+        # Detect website provider
+        logger.debug("Detecting website provider...")
+        provider_detector = ProviderDetector()
+        provider_result = await provider_detector.extract(dealer_context, page)
+        website_provider = provider_result.data if provider_result.success else None
+
+        if provider_result.evidence:
+            evidence.provider_verification = provider_result.evidence
+
+        # Detect credit app provider
+        credit_app_provider = None
+        if urls and urls.credit_app:
+            logger.debug("Detecting credit app provider...")
+            credit_detector = CreditAppProviderDetector()
+            credit_result = await credit_detector.extract(dealer_context, urls.credit_app)
+            credit_app_provider = credit_result.data if credit_result.success else None
+
+            if credit_result.evidence:
+                evidence.credit_app_embedded_evidence = credit_result.evidence
+
+        # Build dealer data
         dealer_data = DealerData(
             name=dealer_name,
             website=url,
-            processed_at=datetime.now(),
-            evidence=Evidence(
-                dealer_homepage_phone=url,
-                captured_timestamp=datetime.now().strftime("%Y-%m-%d %H:%M") + f" ({config.timezone})"
-            )
+            address=address,
+            county=county,
+            phone=phone,
+            hours=hours,
+            urls=urls,
+            website_provider=website_provider,
+            credit_app_provider=credit_app_provider,
+            evidence=evidence,
+            processed_at=datetime.now()
         )
 
-        logger.info("✓ Basic data extracted (using stub implementation)")
+        logger.success(f"Completed extraction: {dealer_name}")
 
         return dealer_data
 
