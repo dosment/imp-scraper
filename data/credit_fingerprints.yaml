@@ -1,0 +1,122 @@
+# Credit Application Provider Detection Fingerprints
+# Based on original_prompt.md specification
+
+seven_hundred_credit:
+  display_name: "700Credit"
+  domains:
+    - secure.700credit.com
+    - 700credit.com
+    - www.700dealer.com
+    - 700dealer.com
+  path_clues:
+    - /creditapp
+    - /apply
+    - /prequal
+    - /quickapplication
+    - /QuickQualify
+    - /quickqualify
+
+routeone:
+  display_name: "RouteOne"
+  domains:
+    - routeone.net
+    - apps.routeone.net
+    - www.routeone.net
+    - digital-retail-ui.routeone.net
+  path_clues:
+    - /digital-retail-ui
+    - /application
+    - /apply
+    - /creditapp
+
+dealertrack:
+  display_name: "Dealertrack"
+  domains:
+    - dealertrack.com
+    - suite.dtdrs.dealertrack.com
+    - dtprod.dealertrack.com
+  path_clues:
+    - /creditapp
+    - /apply
+    - /financing
+    - /suite
+    - /accountId=
+    - /dealerId=
+
+secure_accelerate:
+  display_name: "Secure Accelerate (Dealer.com)"
+  domains:
+    - secure.accelerate.dealer.com
+    - accelerate.dealer.com
+    - www.accelerate.dealer.com
+  path_clues:
+    - /dealer/
+    - /accelerate
+    - /apply
+    - /finance
+
+autofi:
+  display_name: "AutoFi"
+  domains:
+    - autofi.com
+    - app.autofi.com
+    - buy.autofi.com
+    - dealer.autofi.com
+  path_clues:
+    - /buy
+    - /apply
+    - /credit
+    - /finance
+    - /deal
+    - /digital-retail
+
+elend_solutions:
+  display_name: "eLEND Solutions"
+  domains:
+    - elendsolutions.com
+    - app.elendsolutions.com
+    - connect.elendsolutions.com
+  path_clues:
+    - /apply
+    - /prequal
+    - /creditapp
+    - /connect
+
+darwin:
+  display_name: "Darwin Automotive"
+  domains:
+    - darwinautomotive.com
+    - app.darwinautomotive.com
+    - dms.darwinautomotive.com
+    - retail.darwinautomotive.com
+  path_clues:
+    - /digitalretail
+    - /dr
+    - /finance
+    - /creditapp
+    - /apply
+
+cudl:
+  display_name: "CUDL"
+  domains:
+    - cudl.com
+    - apply.cudl.com
+    - www.cudl.com
+  path_clues:
+    - /apply
+    - /application
+    - /creditapp
+
+informativ:
+  display_name: "Informativ (formerly Credit Bureau Connection)"
+  domains:
+    - informativ.com
+    - creditbureauconnection.com
+    - cbcautomotive.com
+    - forms.cbcautomotive.com
+  path_clues:
+    - /credit
+    - /application
+    - /apply
+    - /cbc
+    - /informativ

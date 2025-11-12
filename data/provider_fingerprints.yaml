@@ -1,0 +1,86 @@
+# Website Provider Detection Fingerprints
+# Based on original_prompt.md specification
+
+dealer_com_cox:
+  display_name: "Dealer.com (Cox Automotive)"
+  footer_text_contains:
+    - "Dealer.com"
+    - "Cox Automotive"
+  domain_clues:
+    - "dealer.com"
+  structured_data_clues:
+    - "Dealer.com"
+
+dealer_inspire:
+  display_name: "Dealer Inspire"
+  footer_text_contains:
+    - "Dealer Inspire"
+    - "Cars Commerce"
+  domain_clues:
+    - "dealerinspire.com"
+    - "carscommerce.inc"
+  indicative_hosts:
+    - "secure.dealerinspire.com"
+
+dealer_on:
+  display_name: "DealerOn"
+  footer_text_contains:
+    - "DealerOn"
+  domain_clues:
+    - "dealeron.com"
+
+dealer_eprocess:
+  display_name: "Dealer eProcess"
+  footer_text_contains:
+    - "Dealer eProcess"
+    - "DEP"
+  domain_clues:
+    - "dealereprocess.com"
+
+team_velocity_apollo:
+  display_name: "Team Velocity / Apollo Sites"
+  footer_text_contains:
+    - "Team Velocity"
+    - "Apollo Sites"
+  domain_clues:
+    - "teamvelocitymarketing.com"
+
+sokal:
+  display_name: "Sokal"
+  footer_text_contains:
+    - "Sokal"
+  domain_clues:
+    - "gosokal.com"
+
+dealer_spike:
+  display_name: "Dealer Spike"
+  footer_text_contains:
+    - "Dealer Spike"
+  domain_clues:
+    - "dealerspike.com"
+    - "dealerspike-secure.com"
+
+dealer_alchemist:
+  display_name: "Dealer Alchemist"
+  footer_text_contains:
+    - "Dealer Alchemist"
+  domain_clues:
+    - "dealeralchemist.com"
+
+jazel_auto:
+  display_name: "Jazel Auto"
+  footer_text_contains:
+    - "Jazel"
+    - "Jazel Auto"
+  domain_clues:
+    - "jazel.com"
+    - "jazelauto.com"
+
+carsforsale:
+  display_name: "Carsforsale.com (SiteFLEX)"
+  footer_text_contains:
+    - "Carsforsale.com"
+    - "SiteFLEX"
+  domain_clues:
+    - "carsforsale.com"
+    - "dealers.carsforsale.com"

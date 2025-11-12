@@ -1,0 +1,154 @@
+# ============================================================
+# Dealership Scraper Configuration
+# ============================================================
+
+# ============================================================
+# INPUT URLS (optional - can be overridden via CLI)
+# ============================================================
+input:
+  # Option 1: Direct list
+  urls: []
+    # - https://www.exampledealer1.com/
+    # - https://www.exampledealer2.com/
+
+  # Option 2: Load from file (one URL per line)
+  # url_file: ./dealerships.txt
+
+  # Option 3: Load from CSV (column name "url")
+  # csv_file: ./dealerships.csv
+
+# ============================================================
+# SCRAPING BEHAVIOR
+# ============================================================
+scraper:
+  # Maximum number of concurrent dealerships to process
+  max_concurrent: 5
+
+  # Page load timeout in milliseconds
+  page_timeout_ms: 30000
+
+  # Delay between page visits (seconds) - politeness
+  delay_between_pages_sec: 3
+
+  # Number of retry attempts for failed operations
+  retry_attempts: 3
+
+  # Respect robots.txt (recommended: true)
+  respect_robots_txt: true
+
+  # Run browser in headless mode (false for debugging)
+  headless: true
+
+  # User agent string
+  user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+
+# ============================================================
+# OUTPUT SETTINGS
+# ============================================================
+output:
+  # Single markdown file written per run
+  file: ./output/dealership-data.md
+
+  # Optional header injected at top of the file
+  run_header: true
+
+  # Timezone for timestamps
+  timezone: America/Chicago
+
+  # Locale for formatting
+  locale: en-US
+
+  # Overwrite existing file on fresh run
+  overwrite_existing: true
+
+# ============================================================
+# NORMALIZATION OPTIONS
+# ============================================================
+normalize:
+  phone: true
+  hours: true
+  urls: true
+
+# ============================================================
+# EVIDENCE AND CONFIDENCE
+# ============================================================
+evidence:
+  # Require evidence links for all fields
+  links_required: true
+
+  # Capture confidence scores
+  capture_scores: true
+
+# ============================================================
+# EXTERNAL SERVICES
+# ============================================================
+census:
+  # Enable county lookup via Census Bureau API
+  enabled: true
+
+  # Census Geocoder API endpoint
+  api_url: https://geocoding.geo.census.gov/geocoder
+
+# ============================================================
+# MULTI-LOCATION SETTINGS
+# ============================================================
+multi_location:
+  # Enable multi-location detection
+  enabled: true
+
+  # Maximum locations to extract per website
+  max_locations_per_site: 10
+
+# ============================================================
+# DEBUG SETTINGS (activated via --debug flag)
+# ============================================================
+debug:
+  # Save screenshots of failed pages
+  save_screenshots: true
+
+  # Save HTML snapshots of failed pages
+  save_html: true
+
+  # Debug log file path
+  log_file: ./debug/debug.log
+
+  # Log all network requests
+  log_network: true
+
+# ============================================================
+# EXTRACTION PRIORITIES
+# ============================================================
+extractors:
+  address:
+    # Ordered list of strategies to try
+    strategies:
+      - schema_org
+      - microdata
+      - google_maps
+      - contact_page
+      - footer
+      - header
+      - about_page
+
+  hours:
+    # Priority order for finding hours pages
+    page_priority:
+      - hours
+      - contact
+      - service
+      - locations
+      - about
+
+  phone:
+    # Priority order for finding phone numbers
+    source_priority:
+      - header
+      - footer
+      - contact_page
+
+# ============================================================
+# REGIONAL SETTINGS
+# ============================================================
+regional:
+  # Use regional county labels (Parish, Borough, Independent City)
+  use_regional_county_labels: false
